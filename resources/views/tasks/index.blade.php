@@ -8,6 +8,7 @@
 </head>
 
 <body>
+    <h2>Hello User</h2>
     <h1>Task List </h1>
     <ul>
         @foreach ($tasks as $task)
@@ -20,7 +21,8 @@
             </form>
         @endforeach
     </ul>
-    <a href="{{ route('tasks.create') }}">Add Task</a>
+    <a href="{{ route('tasks.create') }}">Add Task</a> </br>
+    <a href = "/logout">Logout</a>
 
 </body>
 

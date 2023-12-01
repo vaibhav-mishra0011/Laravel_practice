@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,10 +17,30 @@ use App\Http\Controllers\LoginController;
 |
 */
 
-Route::resource('/tasks', TaskController::class);
-Route::get('/users', [RegisterController::class,'index'])->name('index');
-Route::post('/users', [RegisterController::class,  'register'])->name('users.register');
-Route::post('/users', [LoginController::class,  'login'])->name('users.login');
+
+Route::resource('/tasks', TaskController::class)->middleware('isLoggedIn');
+
+Route::get('/', function () {
+    if(Auth::check()) {
+        return redirect('tasks');
+    } else {
+        return redirect('login');
+    }
+});
+
+Route::post('/register', [RegisterController::class, 'register'])->name('register')->middleware('alreadyLoggedIn');
+Route::get('/login', [LoginController::class,'index'])->name('login')->middleware('alreadyLoggedIn');
+Route::get('/register', [RegisterController::class,'index'])->middleware('alreadyLoggedIn');
+Route::get('/', [RegisterController::class,'index'])->middleware('alreadyLoggedIn');
+Route::post('login', [LoginController::class, 'login']);
+
+Route::post('/logout', [AuthController::class, 'logout']);
+
+// Route::get('/logout', function () {
+//     Auth::logout();
+//     return view('users.login');
+// });
+
 
 // get - index
 // post - update

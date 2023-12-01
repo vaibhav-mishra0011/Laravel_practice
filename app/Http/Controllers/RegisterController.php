@@ -20,20 +20,20 @@ class RegisterController extends Controller
             Log::debug($request->all());
 
             $this->validate($request, [
-                'email' => 'required',
+                'email' => 'required|email',
                 'password' => 'required',
             ]);
 
             $user = User::create([
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
-                'name' => 'Default Name'
+                'name' => $request->name,
             ]);
 
-            return view('users.login');
+            return view('users.login')->with('success','you have registered successfully');
         } catch (\Exception $e) {
             Log::error($e);
-            return redirect()->back();
+            return redirect()->back()->with('fail', 'something wrong');
         }
 
     }
